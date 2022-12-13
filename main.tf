@@ -9,7 +9,7 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "3.3.0"
 
-  count = var.create_ec2 ? 1 : 0
+  count = var.create_ec2 ? var.ec2_instance_count : 0
 
   name                        = var.ec2_name
   ami                         = var.ec2_ami
@@ -23,7 +23,7 @@ module "ec2_instance" {
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
-  associate_public_ip_address = var.ec2_associate_public_ip_address
+  associate_public_ip_address = var.create_eip ? true : var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
@@ -40,6 +40,12 @@ module "ec2_instance" {
     local.tags,
     var.tags
   )
+}
+
+resource "aws_eip" "eip" {
+  count = var.create_eip && var.create_ec2 ? length(module.ec2_instance) : 0
+  instance = module.ec2_instance[count.index].id
+  vpc = true
 }
 
 resource "aws_iam_instance_profile" "this" {
@@ -123,12 +129,13 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_launch_template" "this" {
   count = var.create_lauch_template ? 1 : 0
 
-  name_prefix   = var.name_lauch_template
+  name_prefix   = var.ec2_name
   ebs_optimized = var.ec2_ebs_optimized
   instance_type = var.ec2_instance_type
   image_id      = var.ec2_ami
   key_name      = var.ec2_key_name != null ? var.ec2_key_name : element(concat(aws_key_pair.this.*.key_name, [""]), 0)
   user_data     = var.ec2_user_data_base64
+  vpc_security_group_ids = var.ec2_vpc_security_group_ids != null ? var.ec2_vpc_security_group_ids : [element(concat(aws_security_group.ec2_sg.*.id, [""]), 0)]
 
   iam_instance_profile {
     name = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
@@ -201,7 +208,7 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  count = var.create_lauch_template && var.autoscaling_name != "" ? 1 : 0
+  count = var.create_autoscaling_group && var.autoscaling_name != "" ? 1 : 0
 
   name                = var.autoscaling_name
   vpc_zone_identifier = var.autoscaling_subnets
@@ -224,7 +231,7 @@ resource "aws_autoscaling_group" "this" {
 }
 
 resource "aws_autoscaling_schedule" "up" {
-  count                  = var.create_lauch_template ? 1 : 0
+  count                  = var.create_autoscaling_group ? 1 : 0
   scheduled_action_name  = "up"
   min_size               = var.autoscaling_max_size
   max_size               = var.autoscaling_min_size
@@ -236,7 +243,7 @@ resource "aws_autoscaling_schedule" "up" {
 }
 
 resource "aws_autoscaling_schedule" "down" {
-  count                  = var.create_lauch_template ? 1 : 0
+  count                  = var.create_autoscaling_group ? 1 : 0
   scheduled_action_name  = "down"
   min_size               = 0
   max_size               = 0

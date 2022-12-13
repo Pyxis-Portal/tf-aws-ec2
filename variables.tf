@@ -1,5 +1,5 @@
 variable "ec2_name" {
-  description = "Name to be used on EC2 instance created"
+  description = "Name to be used on EC2 instance created."
   type        = string
 }
 
@@ -11,6 +11,12 @@ variable "ec2_ami" {
 variable "ec2_instance_type" {
   description = "The type of instance to start"
   type        = string
+}
+
+variable "ec2_instance_count" {
+  description = "Number of identical instances to create in the same subnet"
+  type = number
+  default = 1
 }
 
 variable "ec2_key_name" {
@@ -32,8 +38,9 @@ variable "ec2_vpc_security_group_ids" {
 }
 
 variable "ec2_subnet_id" {
-  description = "The VPC Subnet ID to launch in"
+  description = "The VPC Subnet ID to launch in. REQUIRED IF create_ec2 = True"
   type        = string
+  default = null
 }
 
 variable "ec2_user_data" {
@@ -177,7 +184,7 @@ variable "autoscaling_name" {
 
 variable "up_star_time" {
   type        = string
-  default     = ""
+  default     = "2014-06-01T00:00:00Z"
   description = "description"
 }
 
@@ -189,7 +196,7 @@ variable "up_end_time" {
 
 variable "down_star_time" {
   type        = string
-  default     = ""
+  default     = "2014-06-01T00:00:00Z"
   description = "description"
 }
 
@@ -301,4 +308,16 @@ variable create_iam_instance_profile {
   type        = bool
   default     = false
   description = ""
+}
+
+variable create_autoscaling_group {
+  type        = bool
+  default     = false
+  description = ""
+}
+
+variable "create_eip" {
+  type = bool
+  default = false
+  description = "Creates EIPs for the instances when create_ec2 is True"
 }
