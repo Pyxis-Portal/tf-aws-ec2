@@ -172,48 +172,65 @@ variable "name_lauch_template" {
   description = "description"
 }
 
-variable autoscaling_name {
+variable "autoscaling_name" {
   type        = string
   default     = ""
   description = "description"
 }
 
-variable up_star_time {
+variable "up_star_time" {
   type        = string
   default     = ""
   description = "description"
 }
 
-variable up_end_time {
+variable "up_end_time" {
+  type        = string
+  default     = null
+  description = "description"
+}
+
+variable "down_star_time" {
   type        = string
   default     = ""
   description = "description"
 }
 
-variable down_star_time {
+variable "down_end_time" {
+  type        = string
+  default     = null
+  description = "description"
+}
+
+variable "create_ec2" {
+  type        = bool
+  default     = false
+  description = "description"
+}
+
+variable "create_lauch_template" {
+  type        = bool
+  default     = false
+  description = "description"
+}
+
+variable "up_recurrence" {
   type        = string
   default     = ""
   description = "description"
 }
 
-variable down_end_time {
+variable "down_recurrence" {
   type        = string
   default     = ""
   description = "description"
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+variable autoscaling_subnets {
+  type        = list(string)
+  default     = [""]
+  description = "description"
+}
 
 
 variable "block_device_mappings" {

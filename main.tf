@@ -8,7 +8,7 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "3.3.0"
 
-  count      = var.create_ec2 ? 1 : 0 
+  count = var.create_ec2 ? 1 : 0
 
   name                        = var.ec2_name
   ami                         = var.ec2_ami
@@ -54,8 +54,9 @@ resource "aws_key_pair" "this" {
 }
 
 resource "aws_security_group" "ec2_sg" {
-  count       = var.create_sg ? 1 : 0
-  name        = "${var.ec2_name}-ec2 "
+  count = var.create_sg ? 1 : 0
+
+  name        = "${var.ec2_name}-ec2"
   description = "Security Group for ${var.ec2_name} ec2"
   vpc_id      = var.sg_vpc_id
 
@@ -121,7 +122,7 @@ resource "aws_launch_template" "this" {
   instance_type = var.ec2_instance_type
   image_id      = var.ec2_ami
   key_name      = var.ec2_key_name != null ? var.ec2_key_name : element(concat(aws_key_pair.this.*.key_name, [""]), 0)
-  user_data     = var.ec2_user_data != null ? null : var.ec2_user_data_base64
+  user_data     = var.ec2_user_data_base64
 
   iam_instance_profile {
     name = aws_iam_instance_profile.this.id
@@ -196,8 +197,8 @@ resource "aws_launch_template" "this" {
 resource "aws_autoscaling_group" "this" {
   count = var.create_lauch_template && var.autoscaling_name != "" ? 1 : 0
 
-  name_prefix         = var.autoscaling_name
-  vpc_zone_identifier = var.ec2_subnet_id
+  name                = var.autoscaling_name
+  vpc_zone_identifier = var.autoscaling_subnets
   max_size            = 1
   min_size            = 1
   desired_capacity    = 1
@@ -210,10 +211,10 @@ resource "aws_autoscaling_group" "this" {
     version = element(concat(aws_launch_template.this.*.latest_version, [""]), 0)
   }
 
-  tags = merge(
-    local.tags,
-    var.tags
-  )
+  #tags = merge(
+  #  local.tags,
+  #  var.tags
+  #)
 
   lifecycle {
     create_before_destroy = true
@@ -226,7 +227,8 @@ resource "aws_autoscaling_schedule" "up" {
   scheduled_action_name  = "up"
   min_size               = 1
   max_size               = 1
-  desired_capacity       = 0
+  desired_capacity       = 1
+  recurrence             = var.up_recurrence
   start_time             = var.up_star_time
   end_time               = var.up_end_time
   autoscaling_group_name = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
@@ -238,6 +240,7 @@ resource "aws_autoscaling_schedule" "down" {
   min_size               = 0
   max_size               = 0
   desired_capacity       = 0
+  recurrence             = var.down_recurrence
   start_time             = var.down_star_time
   end_time               = var.down_end_time
   autoscaling_group_name = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
