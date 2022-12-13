@@ -142,4 +142,14 @@ variable "tags" {
   description = "all tags for all recursives"
 }
 
+variable "create_attachment_rol" {
+  type        = bool
+  default     = false
+  description = "if true, enable create attachment rol"
+}
 
+variable "create_policy" {
+  type        = bool
+  default     = false
+  description = "if true, enable create rol"
+}

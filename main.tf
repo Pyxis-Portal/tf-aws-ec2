@@ -92,3 +92,16 @@ resource "aws_iam_role" "this" {
   name               = "${var.ec2_name}-role"
   assume_role_policy = data.aws_iam_policy_document.policy_role.json
 }
+
+resource "aws_iam_role_policy_attachment" "test-attach" {
+  count      = var.create_attachment_rol ? 1 : 0
+  role       = aws_iam_role.this.name
+  policy_arn = aws_iam_policy.this.arn
+}
+
+resource "aws_iam_policy" "this" {
+  count       = var.create_attachment_rol && var.create_policy ? 1 : 0
+  name        = "${var.ec2_name}-policy"
+  description = "A policy for ec2 bastion"
+  policy      = var.policy_json
+}

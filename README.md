@@ -22,7 +22,9 @@
 
 | Name | Type |
 |------|------|
+| [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.test-attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_key_pair.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [aws_security_group.ec2_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_iam_policy_document.policy_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -31,7 +33,9 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_create_attachment_rol"></a> [create\_attachment\_rol](#input\_create\_attachment\_rol) | if true, enable create attachment rol | `bool` | `false` | no |
 | <a name="input_create_key_pair"></a> [create\_key\_pair](#input\_create\_key\_pair) | if true, enable create key pair | `bool` | `false` | no |
+| <a name="input_create_policy"></a> [create\_policy](#input\_create\_policy) | if true, enable create rol | `bool` | `false` | no |
 | <a name="input_create_sg"></a> [create\_sg](#input\_create\_sg) | if true, enable create security gruop | `string` | `""` | no |
 | <a name="input_ec2_ami"></a> [ec2\_ami](#input\_ec2\_ami) | ID of AMI to use for the instance | `string` | `"ami-0ed9277fb7eb570c9"` | no |
 | <a name="input_ec2_associate_public_ip_address"></a> [ec2\_associate\_public\_ip\_address](#input\_ec2\_associate\_public\_ip\_address) | Whether to associate a public IP address with an instance in a VPC | `bool` | `false` | no |
