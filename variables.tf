@@ -37,7 +37,7 @@ variable "ec2_vpc_security_group_ids" {
 variable "ec2_subnet_id" {
   description = "The VPC Subnet ID to launch in"
   type        = string
-  default = ""
+  default     = ""
 }
 
 variable "ec2_user_data" {
@@ -61,7 +61,7 @@ variable "ec2_hibernation" {
 variable "ec2_availability_zone" {
   description = "AZ to start the instance in"
   type        = string
-  default = ""
+  default     = ""
 }
 
 
@@ -228,25 +228,25 @@ variable "down_recurrence" {
   description = "description"
 }
 
-variable autoscaling_subnets {
+variable "autoscaling_subnets" {
   type        = list(string)
   default     = [""]
   description = "description"
 }
 
-variable autoscaling_max_size {
+variable "autoscaling_max_size" {
   type        = number
   default     = 1
   description = "description"
 }
 
-variable autoscaling_min_size {
+variable "autoscaling_min_size" {
   type        = number
   default     = 1
   description = "description"
 }
 
-variable autoscaling_desired_capacity {
+variable "autoscaling_desired_capacity" {
   type        = number
   default     = 1
   description = "description"

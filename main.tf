@@ -1,6 +1,7 @@
 locals {
   tags = {
     terraform = true
+    name      = var.ec2_name
   }
 }
 
@@ -221,7 +222,7 @@ resource "aws_autoscaling_schedule" "up" {
   count                  = var.create_lauch_template ? 1 : 0
   scheduled_action_name  = "up"
   min_size               = var.autoscaling_max_size
-  max_size               = var.autoscaling_min_size 
+  max_size               = var.autoscaling_min_size
   desired_capacity       = var.autoscaling_desired_capacity
   recurrence             = var.up_recurrence
   start_time             = var.up_star_time
