@@ -1,9 +1,9 @@
 output "id" {
   description = "The ID of the instance"
-  value       = module.ec2_instance.id
+  value       = element(concat(module.ec2_instance.*.id, [""]), 0 )
 }
 
 output "arn" {
   description = "The ARN of the instance"
-  value       = module.ec2_instance.arn
+  value       =  element(concat(module.ec2_instance.*.arn, [""]), 0)
 }

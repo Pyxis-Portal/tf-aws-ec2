@@ -165,3 +165,91 @@ variable "sg_vpc_id" {
   default     = ""
   description = ""
 }
+
+variable "name_lauch_template" {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+variable autoscaling_name {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+variable up_star_time {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+variable up_end_time {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+variable down_star_time {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+variable down_end_time {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+variable "block_device_mappings" {
+  description = "Specify volumes to attach to the instance besides the volumes specified by the AMI"
+
+  type = list(object({
+    device_name  = string
+    no_device    = bool
+    virtual_name = string
+    ebs = object({
+      delete_on_termination = bool
+      encrypted             = bool
+      iops                  = number
+      kms_key_id            = string
+      snapshot_id           = string
+      volume_size           = number
+      volume_type           = string
+    })
+  }))
+
+  default = []
+}
+
+variable "instance_market_options" {
+  description = "The market (purchasing) option for the instances"
+
+  type = object({
+    market_type = string
+    spot_options = object({
+      block_duration_minutes         = number
+      instance_interruption_behavior = string
+      max_price                      = number
+      spot_instance_type             = string
+      valid_until                    = string
+    })
+  })
+
+  default = null
+}
