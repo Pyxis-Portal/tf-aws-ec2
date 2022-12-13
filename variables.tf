@@ -37,6 +37,7 @@ variable "ec2_vpc_security_group_ids" {
 variable "ec2_subnet_id" {
   description = "The VPC Subnet ID to launch in"
   type        = string
+  default = ""
 }
 
 variable "ec2_user_data" {
@@ -60,6 +61,7 @@ variable "ec2_hibernation" {
 variable "ec2_availability_zone" {
   description = "AZ to start the instance in"
   type        = string
+  default = ""
 }
 
 
@@ -231,7 +233,6 @@ variable autoscaling_subnets {
   default     = [""]
   description = "description"
 }
-
 
 variable "block_device_mappings" {
   description = "Specify volumes to attach to the instance besides the volumes specified by the AMI"
