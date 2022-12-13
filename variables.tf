@@ -137,8 +137,8 @@ variable "ec2_sg_ingress_rules" {
 }
 
 variable "tags" {
-  type        = string
-  default     = ""
+  type        = any
+  default     = null
   description = "all tags for all recursives"
 }
 
@@ -152,4 +152,16 @@ variable "create_policy" {
   type        = bool
   default     = false
   description = "if true, enable create rol"
+}
+
+variable "policy_json" {
+  type        = string
+  default     = null
+  description = ""
+}
+
+variable "sg_vpc_id" {
+  type        = string
+  default     = ""
+  description = ""
 }

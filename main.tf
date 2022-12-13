@@ -19,14 +19,14 @@ module "ec2_instance" {
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   availability_zone           = var.ec2_availability_zone
-  iam_instance_profile        = aws_iam_role.this.arn
+  iam_instance_profile        = aws_iam_instance_profile.this.id
   associate_public_ip_address = var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
   ipv6_addresses              = var.ec2_ipv6_addresses
   ebs_optimized               = var.ec2_ebs_optimized
-  ebs_block_device            = var.ec2_ebs_block_device
+  root_block_device            = var.ec2_ebs_block_device
 
   tags = merge(
     local.tags,
@@ -38,6 +38,13 @@ module "ec2_instance" {
     var.tags
   )
 }
+
+
+resource "aws_iam_instance_profile" "this" {
+  name = var.ec2_name
+  role = aws_iam_role.this.id
+}
+
 
 resource "aws_key_pair" "this" {
   count = var.create_key_pair ? 1 : 0
@@ -96,7 +103,7 @@ resource "aws_iam_role" "this" {
 resource "aws_iam_role_policy_attachment" "test-attach" {
   count      = var.create_attachment_rol ? 1 : 0
   role       = aws_iam_role.this.name
-  policy_arn = aws_iam_policy.this.arn
+  policy_arn = element(concat(aws_iam_policy.this.*.arn, [""]), 0)
 }
 
 resource "aws_iam_policy" "this" {
