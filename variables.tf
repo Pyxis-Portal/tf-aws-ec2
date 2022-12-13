@@ -1,19 +1,16 @@
 variable "ec2_name" {
   description = "Name to be used on EC2 instance created"
   type        = string
-  default     = ""
 }
 
 variable "ec2_ami" {
   description = "ID of AMI to use for the instance"
   type        = string
-  default     = "ami-0ed9277fb7eb570c9"
 }
 
 variable "ec2_instance_type" {
   description = "The type of instance to start"
   type        = string
-  default     = "t3.micro"
 }
 
 variable "ec2_key_name" {
@@ -37,7 +34,6 @@ variable "ec2_vpc_security_group_ids" {
 variable "ec2_subnet_id" {
   description = "The VPC Subnet ID to launch in"
   type        = string
-  default     = ""
 }
 
 variable "ec2_user_data" {
@@ -59,11 +55,10 @@ variable "ec2_hibernation" {
 }
 
 variable "ec2_availability_zone" {
-  description = "AZ to start the instance in"
+  description = " AZ to start the instance in"
   type        = string
-  default     = ""
+  default     = null
 }
-
 
 variable "ec2_associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
@@ -127,8 +122,8 @@ variable "public_key" {
 
 
 variable "create_sg" {
-  type        = string
-  default     = ""
+  type        = bool
+  default     = false
   description = "if true, enable create security gruop"
 }
 

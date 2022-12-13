@@ -6,7 +6,7 @@ locals {
 }
 
 module "ec2_instance" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
+  source  = "terraform-aws-modules/dynamodb-table/aws"
   version = "3.3.0"
 
   count = var.create_ec2 ? 1 : 0
@@ -14,6 +14,7 @@ module "ec2_instance" {
   name                        = var.ec2_name
   ami                         = var.ec2_ami
   instance_type               = var.ec2_instance_type
+  availability_zone           = var.ec2_availability_zone
   key_name                    = var.ec2_key_name != null ? var.ec2_key_name : element(concat(aws_key_pair.this.*.key_name, [""]), 0)
   monitoring                  = var.ec2_monitoring
   vpc_security_group_ids      = var.ec2_vpc_security_group_ids != null ? var.ec2_vpc_security_group_ids : [element(concat(aws_security_group.ec2_sg.*.id, [""]), 0)]
@@ -21,7 +22,6 @@ module "ec2_instance" {
   user_data                   = var.ec2_user_data
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
-  availability_zone           = var.ec2_availability_zone
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
   associate_public_ip_address = var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
