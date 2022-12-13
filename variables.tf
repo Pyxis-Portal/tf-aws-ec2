@@ -289,3 +289,21 @@ variable "instance_market_options" {
 
   default = null
 }
+
+variable create_role {
+  type        = bool
+  default     = false
+  description = ""
+}
+
+variable instance_profile_role {
+  type        = string
+  default     = null
+  description = "description"
+}
+
+variable create_iam_instance_profile {
+  type        = bool
+  default     = false
+  description = ""
+}

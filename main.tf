@@ -1,7 +1,7 @@
 locals {
   tags = {
     terraform = true
-    name      = var.ec2_name
+    Name      = var.ec2_name
   }
 }
 
@@ -22,7 +22,7 @@ module "ec2_instance" {
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   availability_zone           = var.ec2_availability_zone
-  iam_instance_profile        = aws_iam_instance_profile.this.id
+  iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
   associate_public_ip_address = var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
@@ -43,8 +43,42 @@ module "ec2_instance" {
 }
 
 resource "aws_iam_instance_profile" "this" {
+  count = var.create_iam_instance_profile ? 1 : 0
   name = var.ec2_name
-  role = aws_iam_role.this.id
+  role = var.create_role ? element(concat(aws_iam_role.this.*.id, [""]), 0) : var.instance_profile_role
+}
+
+resource "aws_iam_role" "this" {
+  count = var.create_role ? 1 : 0 
+
+  name               = "${var.ec2_name}-role"
+  assume_role_policy = element(concat(data.aws_iam_policy_document.policy_role.*.json, [""]), 0)
+}
+
+data "aws_iam_policy_document" "policy_role" {
+  count = var.create_role ? 1 : 0
+
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "test-attach" {
+  count      = var.create_attachment_rol ? 1 : 0
+  role       = element(concat(aws_iam_role.this.*.name, [""]), 0)
+  policy_arn = element(concat(aws_iam_policy.this.*.arn, [""]), 0)
+}
+
+resource "aws_iam_policy" "this" {
+  count       = var.create_attachment_rol && var.create_policy ? 1 : 0
+  name        = "${var.ec2_name}-policy"
+  description = "A policy for ec2 bastion"
+  policy      = var.policy_json
 }
 
 resource "aws_key_pair" "this" {
@@ -86,35 +120,6 @@ resource "aws_security_group" "ec2_sg" {
   )
 }
 
-data "aws_iam_policy_document" "policy_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "this" {
-  name               = "${var.ec2_name}-role"
-  assume_role_policy = data.aws_iam_policy_document.policy_role.json
-}
-
-resource "aws_iam_role_policy_attachment" "test-attach" {
-  count      = var.create_attachment_rol ? 1 : 0
-  role       = aws_iam_role.this.name
-  policy_arn = element(concat(aws_iam_policy.this.*.arn, [""]), 0)
-}
-
-resource "aws_iam_policy" "this" {
-  count       = var.create_attachment_rol && var.create_policy ? 1 : 0
-  name        = "${var.ec2_name}-policy"
-  description = "A policy for ec2 bastion"
-  policy      = var.policy_json
-}
-
 resource "aws_launch_template" "this" {
   count = var.create_lauch_template ? 1 : 0
 
@@ -126,7 +131,7 @@ resource "aws_launch_template" "this" {
   user_data     = var.ec2_user_data_base64
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.this.id
+    name = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
   }
 
   network_interfaces {
