@@ -6,7 +6,7 @@ locals {
 }
 
 module "ec2_instance" {
-  source  = "terraform-aws-modules/dynamodb-table/aws"
+  source  = "terraform-aws-modules/ec2-instance/aws"
   version = "3.3.0"
 
   count = var.create_ec2 ? 1 : 0
