@@ -234,6 +234,24 @@ variable autoscaling_subnets {
   description = "description"
 }
 
+variable autoscaling_max_size {
+  type        = number
+  default     = 1
+  description = "description"
+}
+
+variable autoscaling_min_size {
+  type        = number
+  default     = 1
+  description = "description"
+}
+
+variable autoscaling_desired_capacity {
+  type        = number
+  default     = 1
+  description = "description"
+}
+
 variable "block_device_mappings" {
   description = "Specify volumes to attach to the instance besides the volumes specified by the AMI"
 

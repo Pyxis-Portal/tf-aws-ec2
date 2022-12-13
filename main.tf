@@ -199,9 +199,9 @@ resource "aws_autoscaling_group" "this" {
 
   name                = var.autoscaling_name
   vpc_zone_identifier = var.autoscaling_subnets
-  max_size            = 1
-  min_size            = 1
-  desired_capacity    = 1
+  max_size            = var.autoscaling_max_size
+  min_size            = var.autoscaling_min_size
+  desired_capacity    = var.autoscaling_desired_capacity
   #termination_policies    = var.termination_policies
   #enabled_metrics         = var.enabled_metrics
   #service_linked_role_arn = var.service_linked_role_arn
@@ -210,11 +210,6 @@ resource "aws_autoscaling_group" "this" {
     id      = element(concat(aws_launch_template.this.*.id, [""]), 0)
     version = element(concat(aws_launch_template.this.*.latest_version, [""]), 0)
   }
-
-  #tags = merge(
-  #  local.tags,
-  #  var.tags
-  #)
 
   lifecycle {
     create_before_destroy = true
@@ -225,9 +220,9 @@ resource "aws_autoscaling_group" "this" {
 resource "aws_autoscaling_schedule" "up" {
   count                  = var.create_lauch_template ? 1 : 0
   scheduled_action_name  = "up"
-  min_size               = 1
-  max_size               = 1
-  desired_capacity       = 1
+  min_size               = var.autoscaling_max_size
+  max_size               = var.autoscaling_min_size 
+  desired_capacity       = var.autoscaling_desired_capacity
   recurrence             = var.up_recurrence
   start_time             = var.up_star_time
   end_time               = var.up_end_time
