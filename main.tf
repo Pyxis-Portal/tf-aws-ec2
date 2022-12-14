@@ -45,6 +45,7 @@ module "ec2_instance" {
 resource "aws_eip" "eip" {
   count = var.create_eip && var.create_ec2 ? length(module.ec2_instance) : 0
   instance = module.ec2_instance[count.index].id
+  address  = var.eip_address != "" ? var.eip_address : null
   vpc = true
 }
 

@@ -328,3 +328,9 @@ variable "create_eip" {
   default = false
   description = "Creates EIPs for the instances when create_ec2 is True"
 }
+
+variable eip_address {
+  type        = string
+  default     = ""
+  description = "IP address from an EC2 BYOIP pool. This option is only available for VPC EIPs."
+}
