@@ -23,7 +23,7 @@ module "ec2_instance" {
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
-  associate_public_ip_address = var.create_eip ? true : var.ec2_associate_public_ip_address
+  associate_public_ip_address = var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
@@ -47,6 +47,12 @@ resource "aws_eip" "eip" {
   instance = module.ec2_instance[count.index].id
   address  = var.eip_address != "" ? var.eip_address : null
   vpc = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  count = var.create_eip_association && var.create_ec2 ? length(module.ec2_instance) : 0
+  instance_id   = module.ec2_instance[count.index].id
+  allocation_id = var.eip_association_allocation_id
 }
 
 resource "aws_iam_instance_profile" "this" {

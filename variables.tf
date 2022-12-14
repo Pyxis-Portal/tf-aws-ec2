@@ -334,3 +334,16 @@ variable eip_address {
   default     = ""
   description = "IP address from an EC2 BYOIP pool. This option is only available for VPC EIPs."
 }
+
+
+variable create_eip_association {
+  type = bool
+  default = false
+  description = "Creates EIPs for the instances when create_ec2 is True"
+}
+
+variable eip_association_allocation_id {
+  type        = string
+  default     = ""
+  description = "The allocation ID. This is required for EC2-VPC."
+}
