@@ -23,7 +23,7 @@ module "ec2_instance" {
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
-  associate_public_ip_address = var.create_eip ? false : var.ec2_associate_public_ip_address
+  associate_public_ip_address = var.create_eip ? true : var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
@@ -74,14 +74,14 @@ data "aws_iam_policy_document" "policy_role" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "test-attach" {
-  count      = var.create_attachment_rol ? 1 : 0
+resource "aws_iam_role_policy_attachment" "attach" {
+  count      = var.create_attachment_role ? 1 : 0
   role       = element(concat(aws_iam_role.this.*.name, [""]), 0)
   policy_arn = element(concat(aws_iam_policy.this.*.arn, [""]), 0)
 }
 
 resource "aws_iam_policy" "this" {
-  count       = var.create_attachment_rol && var.create_policy ? 1 : 0
+  count       = var.create_attachment_role && var.create_policy ? 1 : 0
   name        = "${var.ec2_name}-policy"
   description = "A policy for ec2 bastion"
   policy      = var.policy_json
@@ -105,11 +105,12 @@ resource "aws_security_group" "ec2_sg" {
     for_each = var.ec2_sg_ingress_rules
 
     content {
-      description = ingress.value["description"]
-      from_port   = ingress.value["from_port"]
-      to_port     = ingress.value["to_port"]
-      cidr_blocks = ingress.value["cidr_blocks"]
-      protocol    = ingress.value["protocol"]
+      description     = ingress.value["description"]
+      from_port       = ingress.value["from_port"]
+      to_port         = ingress.value["to_port"]
+      cidr_blocks     = lookup(ingress.value, "cidr_blocks", null)
+      protocol        = ingress.value["protocol"]
+      security_groups = lookup(ingress.value, "security_groups", null)
     }
   }
 

@@ -146,7 +146,7 @@ variable "tags" {
   description = "all tags for all recursives"
 }
 
-variable "create_attachment_rol" {
+variable "create_attachment_role" {
   type        = bool
   default     = false
   description = "if true, enable create attachment rol"

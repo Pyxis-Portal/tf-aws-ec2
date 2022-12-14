@@ -25,16 +25,14 @@
 | [aws_autoscaling_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group) | resource |
 | [aws_autoscaling_schedule.down](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_schedule) | resource |
 | [aws_autoscaling_schedule.up](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_schedule) | resource |
-| [aws_ebs_volume.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ebs_volume) | resource |
 | [aws_eip.eip](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_instance_profile.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy_attachment.test-attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_key_pair.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template) | resource |
 | [aws_security_group.ec2_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_volume_attachment.ebs_att](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/volume_attachment) | resource |
 | [aws_iam_policy_document.policy_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
@@ -47,7 +45,7 @@
 | <a name="input_autoscaling_name"></a> [autoscaling\_name](#input\_autoscaling\_name) | description | `string` | `""` | no |
 | <a name="input_autoscaling_subnets"></a> [autoscaling\_subnets](#input\_autoscaling\_subnets) | description | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | <a name="input_block_device_mappings"></a> [block\_device\_mappings](#input\_block\_device\_mappings) | Specify volumes to attach to the instance besides the volumes specified by the AMI | <pre>list(object({<br>    device_name  = string<br>    no_device    = bool<br>    virtual_name = string<br>    ebs = object({<br>      delete_on_termination = bool<br>      encrypted             = bool<br>      iops                  = number<br>      kms_key_id            = string<br>      snapshot_id           = string<br>      volume_size           = number<br>      volume_type           = string<br>    })<br>  }))</pre> | `[]` | no |
-| <a name="input_create_attachment_rol"></a> [create\_attachment\_rol](#input\_create\_attachment\_rol) | if true, enable create attachment rol | `bool` | `false` | no |
+| <a name="input_create_attachment_role"></a> [create\_attachment\_role](#input\_create\_attachment\_role) | if true, enable create attachment rol | `bool` | `false` | no |
 | <a name="input_create_autoscaling_group"></a> [create\_autoscaling\_group](#input\_create\_autoscaling\_group) | n/a | `bool` | `false` | no |
 | <a name="input_create_ec2"></a> [create\_ec2](#input\_create\_ec2) | description | `bool` | `false` | no |
 | <a name="input_create_eip"></a> [create\_eip](#input\_create\_eip) | Creates EIPs for the instances when create\_ec2 is True | `bool` | `false` | no |
@@ -60,7 +58,6 @@
 | <a name="input_down_end_time"></a> [down\_end\_time](#input\_down\_end\_time) | description | `string` | `null` | no |
 | <a name="input_down_recurrence"></a> [down\_recurrence](#input\_down\_recurrence) | description | `string` | `""` | no |
 | <a name="input_down_star_time"></a> [down\_star\_time](#input\_down\_star\_time) | description | `string` | `"2014-06-01T00:00:00Z"` | no |
-| <a name="input_ebs_volume"></a> [ebs\_volume](#input\_ebs\_volume) | ebs\_volume = [<br>  {<br>    availability\_zone    = "us-west-2a" # Required<br>    size                 = 40 # Required<br>    device\_name          = "/dev/sdh"<br>    encrypted            = false<br>    iops                 =  null #The amount of IOPS to provision for the disk. Only valid for type of io1, io2 or gp3.<br>    type                 = "gp2"<br>    multi\_attach\_enabled = false<br>    snapshot\_id          = null # A snapshot to base the EBS volume off of.<br>    outpost\_arn          = null #The Amazon Resource Name (ARN) of the Outpost.<br>    kms\_key\_id           = null # The ARN for the KMS encryption key<br>    throughput           =  null # The throughput that the volume supports, in MiB/s. Only valid for type of gp3.<br>    index\_ec2            = 0 # Index of identification of your ec2 in the creation moment in terraform <br>  }<br>] | `any` | `[]` | no |
 | <a name="input_ec2_ami"></a> [ec2\_ami](#input\_ec2\_ami) | ID of AMI to use for the instance | `string` | n/a | yes |
 | <a name="input_ec2_associate_public_ip_address"></a> [ec2\_associate\_public\_ip\_address](#input\_ec2\_associate\_public\_ip\_address) | Whether to associate a public IP address with an instance in a VPC | `bool` | `false` | no |
 | <a name="input_ec2_availability_zone"></a> [ec2\_availability\_zone](#input\_ec2\_availability\_zone) | AZ to start the instance in | `string` | `null` | no |
@@ -99,4 +96,7 @@
 |------|-------------|
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the instance |
 | <a name="output_id"></a> [id](#output\_id) | The ID of the instance |
+| <a name="output_id_security_group"></a> [id\_security\_group](#output\_id\_security\_group) | n/a |
+| <a name="output_ip"></a> [ip](#output\_ip) | The ARN of the instance |
+| <a name="output_public_dns"></a> [public\_dns](#output\_public\_dns) | The ARN of the instance |
 <!-- END_TF_DOCS -->

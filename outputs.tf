@@ -16,4 +16,8 @@ output "ip" {
 output "public_dns" {
   description = "The ARN of the instance"
   value       = element(concat(module.ec2_instance.*.public_dns, [""]), 0)
-} 
+}
+
+output id_security_group {
+  value       = element(concat(aws_security_group.ec2_sg.*.id , [""]), 0)
+}
