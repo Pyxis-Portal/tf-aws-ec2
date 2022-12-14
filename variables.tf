@@ -140,6 +140,13 @@ variable "ec2_sg_ingress_rules" {
   description = "all configuration for rules ingress of security group"
 }
 
+variable "ec2_sg_egress_rules" {
+  type        = any
+  default     = []
+  description = "all configuration for rules ingress of security group"
+}
+
+
 variable "tags" {
   type        = any
   default     = null

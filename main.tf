@@ -114,11 +114,17 @@ resource "aws_security_group" "ec2_sg" {
     }
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "egress" {
+    for_each = var.ec2_sg_egress_rules
+
+    content {
+      description     = egress.value["description"]
+      from_port       = egress.value["from_port"]
+      to_port         = egress.value["to_port"]
+      cidr_blocks     = lookup(egress.value, "cidr_blocks", null)
+      protocol        = egress.value["protocol"]
+      security_groups = lookup(egress.value, "security_groups", null)
+    }
   }
 
   tags = merge(
