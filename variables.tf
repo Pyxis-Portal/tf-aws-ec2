@@ -389,6 +389,12 @@ variable "instance_profile_name" {
   description = "IAM Role profile name for instance"
 }
 
+variable "time_zone" {
+  type        = string
+  default     = null
+  description = "Time zone selection for instance"
+}
+
 variable "create_target_group_attachment" {
   type        = bool
   default     = false
@@ -401,8 +407,15 @@ variable "target_group" {
   description = "list ARN of target Groups"
 }
 
-variable "time_zone" {
+variable "health_check_grace_period" {
+  description = "Time (in seconds) after instance comes into service before checking health"
+  type        = number
+  default     = 300
+}
+
+
+variable "iam_policy_name" {
   type        = string
-  default     = null
-  description = "Time zone selection for instance"
+  default     = ""
+  description = "Specific name for the Policy."
 }
