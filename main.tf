@@ -22,7 +22,7 @@ module "ec2_instance" {
   user_data                   = var.ec2_user_data
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
-  iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
+  iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : var.instance_profile_name != "" ? var.instance_profile_name : null
   associate_public_ip_address = var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
@@ -164,7 +164,7 @@ resource "aws_launch_template" "this" {
   user_data     = var.ec2_user_data_base64
 
   iam_instance_profile {
-    name = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
+    name = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : var.instance_profile_name != "" ? var.instance_profile_name : null
   }
 
   network_interfaces {
@@ -267,6 +267,7 @@ resource "aws_autoscaling_schedule" "up" {
   start_time             = var.up_star_time
   end_time               = var.up_end_time
   autoscaling_group_name = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
+  time_zone              = var.time_zone  
 }
 
 resource "aws_autoscaling_schedule" "down" {
@@ -279,4 +280,5 @@ resource "aws_autoscaling_schedule" "down" {
   start_time             = var.down_star_time
   end_time               = var.down_end_time
   autoscaling_group_name = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
+  time_zone              = var.time_zone  
 }

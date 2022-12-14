@@ -383,6 +383,12 @@ variable "attach_aws_policy_arn" {
   description = "The ARN of the policy you want to apply"
 }
 
+variable "instance_profile_name" {
+  type        = string
+  default     = ""
+  description = "IAM Role profile name for instance"
+}
+
 variable "create_target_group_attachment" {
   type        = bool
   default     = false
@@ -393,4 +399,10 @@ variable "target_group" {
   type        = any
   default     = []
   description = "list ARN of target Groups"
+}
+
+variable "time_zone" {
+  type        = string
+  default     = null
+  description = "Time zone selection for instance"
 }
