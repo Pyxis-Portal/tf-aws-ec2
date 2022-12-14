@@ -18,13 +18,13 @@ module "ec2_instance" {
   key_name                    = var.ec2_key_name != null ? var.ec2_key_name : element(concat(aws_key_pair.this.*.key_name, [""]), 0)
   monitoring                  = var.ec2_monitoring
   vpc_security_group_ids      = var.ec2_vpc_security_group_ids != null ? var.ec2_vpc_security_group_ids : [element(concat(aws_security_group.ec2_sg.*.id, [""]), 0)]
-  subnet_id                   = var.ec2_subnet_id
+  subnet_id                   = var.ec2_instance_count != 1 ? var.ec2_subnet_ids[count.index] : var.ec2_subnet_id
   user_data                   = var.ec2_user_data
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
   associate_public_ip_address = var.ec2_associate_public_ip_address
-  private_ip                  = var.ec2_private_ip
+  private_ip                  = var.ec2_instance_count != 1 ? var.ec2_private_ips[count.index] : var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
   ipv6_addresses              = var.ec2_ipv6_addresses
@@ -228,6 +228,7 @@ resource "aws_autoscaling_group" "this" {
   max_size            = var.autoscaling_max_size
   min_size            = var.autoscaling_min_size
   desired_capacity    = var.autoscaling_desired_capacity
+  target_group_arns   = var.autoscaling_target_group_arns 
   #termination_policies    = var.termination_policies
   #enabled_metrics         = var.enabled_metrics
   #service_linked_role_arn = var.service_linked_role_arn
@@ -244,7 +245,7 @@ resource "aws_autoscaling_group" "this" {
 }
 
 resource "aws_autoscaling_schedule" "up" {
-  count                  = var.create_autoscaling_group ? 1 : 0
+  count                  = var.create_autoscaling_group && var.create_autoscaling_schedule_up ? 1 : 0
   scheduled_action_name  = "up"
   min_size               = var.autoscaling_max_size
   max_size               = var.autoscaling_min_size
@@ -256,7 +257,7 @@ resource "aws_autoscaling_schedule" "up" {
 }
 
 resource "aws_autoscaling_schedule" "down" {
-  count                  = var.create_autoscaling_group ? 1 : 0
+  count                  = var.create_autoscaling_group && var.create_autoscaling_schedule_down ? 1 : 0
   scheduled_action_name  = "down"
   min_size               = 0
   max_size               = 0

@@ -335,7 +335,6 @@ variable eip_address {
   description = "IP address from an EC2 BYOIP pool. This option is only available for VPC EIPs."
 }
 
-
 variable create_eip_association {
   type = bool
   default = false
@@ -346,4 +345,34 @@ variable eip_association_allocation_id {
   type        = string
   default     = ""
   description = "The allocation ID. This is required for EC2-VPC."
+}
+
+variable autoscaling_target_group_arns {
+  type        = list(string)
+  default     = [""]
+  description = " A set of aws_alb_target_group ARNs, for use with Application or Network Load Balancing."
+}
+
+variable create_autoscaling_schedule_down {
+  type        = bool
+  default     = false
+  description = "if this valus is true, you'll create a schedule_down"
+}
+
+variable create_autoscaling_schedule_up {
+  type        = bool
+  default     = false
+  description = "if this valus is true, you'll create a schedule_up"
+}
+
+variable ec2_subnet_ids {
+  type        = list(string)
+  default     = [""]
+  description = "description"
+}
+
+variable ec2_private_ips {
+  type        = list(string)
+  default     = [""]
+  description = "description"
 }
