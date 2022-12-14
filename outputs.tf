@@ -18,6 +18,6 @@ output "public_dns" {
   value       = element(concat(module.ec2_instance.*.public_dns, [""]), 0)
 }
 
-output id_security_group {
-  value       = element(concat(aws_security_group.ec2_sg.*.id , [""]), 0)
+output "id_security_group" {
+  value = element(concat(aws_security_group.ec2_sg.*.id, [""]), 0)
 }

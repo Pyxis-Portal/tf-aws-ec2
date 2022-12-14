@@ -9,7 +9,7 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "3.3.0"
 
-  count = var.create_ec2 ? var.ec2_instance_count : 0
+  count = var.create_ec2 ? 1 : 0
 
   name                        = var.ec2_name
   ami                         = var.ec2_ami
@@ -18,13 +18,13 @@ module "ec2_instance" {
   key_name                    = var.ec2_key_name != null ? var.ec2_key_name : element(concat(aws_key_pair.this.*.key_name, [""]), 0)
   monitoring                  = var.ec2_monitoring
   vpc_security_group_ids      = var.ec2_vpc_security_group_ids != null ? var.ec2_vpc_security_group_ids : [element(concat(aws_security_group.ec2_sg.*.id, [""]), 0)]
-  subnet_id                   = var.ec2_instance_count != 1 ? var.ec2_subnet_ids[count.index] : var.ec2_subnet_id
+  subnet_id                   = var.ec2_subnet_id
   user_data                   = var.ec2_user_data
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
   associate_public_ip_address = var.ec2_associate_public_ip_address
-  private_ip                  = var.ec2_instance_count != 1 ? var.ec2_private_ips[count.index] : var.ec2_private_ip
+  private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
   ipv6_addresses              = var.ec2_ipv6_addresses
@@ -42,28 +42,35 @@ module "ec2_instance" {
   )
 }
 
+resource "aws_lb_target_group_attachment" "test" {
+  count = var.create_target_group_attachment ? length(var.target_group) : 0
+
+  target_group_arn = var.target_group[count.index].attachment
+  target_id        = element(concat(module.ec2_instance.*.id, [""]), 0)
+  port             = var.target_group[count.index].port
+}
+
 resource "aws_eip" "eip" {
-  count = var.create_eip && var.create_ec2 ? length(module.ec2_instance) : 0
-  instance = module.ec2_instance[count.index].id
+  count    = var.create_eip && var.create_ec2 ? 1 : 0
+  instance = element(concat(module.ec2_instance.*.id, [""]), 0)
   address  = var.eip_address != "" ? var.eip_address : null
-  vpc = true
+  vpc      = true
 }
 
 resource "aws_eip_association" "eip_assoc" {
-  count = var.create_eip_association && var.create_ec2 ? length(module.ec2_instance) : 0
-  instance_id   = module.ec2_instance[count.index].id
+  count         = var.create_eip_association && var.create_ec2 ? 1 : 0
+  instance_id   = element(concat(module.ec2_instance.*.id, [""]), 0)
   allocation_id = var.eip_association_allocation_id
 }
 
 resource "aws_iam_instance_profile" "this" {
   count = var.create_iam_instance_profile ? 1 : 0
-  name = var.ec2_name
-  role = var.create_role ? element(concat(aws_iam_role.this.*.id, [""]), 0) : var.instance_profile_role
+  name  = var.ec2_name
+  role  = var.create_role ? element(concat(aws_iam_role.this.*.id, [""]), 0) : var.instance_profile_role
 }
 
 resource "aws_iam_role" "this" {
-  count = var.create_role ? 1 : 0 
-
+  count              = var.create_role ? 1 : 0
   name               = "${var.ec2_name}-role"
   assume_role_policy = element(concat(data.aws_iam_policy_document.policy_role.*.json, [""]), 0)
 }
@@ -85,6 +92,12 @@ resource "aws_iam_role_policy_attachment" "attach" {
   count      = var.create_attachment_role ? 1 : 0
   role       = element(concat(aws_iam_role.this.*.name, [""]), 0)
   policy_arn = element(concat(aws_iam_policy.this.*.arn, [""]), 0)
+}
+
+resource "aws_iam_role_policy_attachment" "attach_aws" {
+  count      = length(var.attach_aws_policy_arn) != 0 ? length(var.attach_aws_policy_arn) : 0
+  role       = element(concat(aws_iam_role.this.*.name, [""]), 0)
+  policy_arn = var.attach_aws_policy_arn[count.index]
 }
 
 resource "aws_iam_policy" "this" {
@@ -228,7 +241,7 @@ resource "aws_autoscaling_group" "this" {
   max_size            = var.autoscaling_max_size
   min_size            = var.autoscaling_min_size
   desired_capacity    = var.autoscaling_desired_capacity
-  target_group_arns   = var.autoscaling_target_group_arns 
+  target_group_arns   = var.autoscaling_target_group_arns
   #termination_policies    = var.termination_policies
   #enabled_metrics         = var.enabled_metrics
   #service_linked_role_arn = var.service_linked_role_arn

@@ -15,8 +15,8 @@ variable "ec2_instance_type" {
 
 variable "ec2_instance_count" {
   description = "Number of identical instances to create in the same subnet"
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "ec2_key_name" {
@@ -40,7 +40,7 @@ variable "ec2_vpc_security_group_ids" {
 variable "ec2_subnet_id" {
   description = "The VPC Subnet ID to launch in. REQUIRED IF create_ec2 = True"
   type        = string
-  default = null
+  default     = null
 }
 
 variable "ec2_user_data" {
@@ -299,80 +299,98 @@ variable "instance_market_options" {
   default = null
 }
 
-variable create_role {
+variable "create_role" {
   type        = bool
   default     = false
   description = ""
 }
 
-variable instance_profile_role {
+variable "instance_profile_role" {
   type        = string
   default     = null
   description = "description"
 }
 
-variable create_iam_instance_profile {
+variable "create_iam_instance_profile" {
   type        = bool
   default     = false
   description = ""
 }
 
-variable create_autoscaling_group {
+variable "create_autoscaling_group" {
   type        = bool
   default     = false
   description = ""
 }
 
 variable "create_eip" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Creates EIPs for the instances when create_ec2 is True"
 }
 
-variable eip_address {
+variable "eip_address" {
   type        = string
   default     = ""
   description = "IP address from an EC2 BYOIP pool. This option is only available for VPC EIPs."
 }
 
-variable create_eip_association {
-  type = bool
-  default = false
+variable "create_eip_association" {
+  type        = bool
+  default     = false
   description = "Creates EIPs for the instances when create_ec2 is True"
 }
 
-variable eip_association_allocation_id {
+variable "eip_association_allocation_id" {
   type        = string
   default     = ""
   description = "The allocation ID. This is required for EC2-VPC."
 }
 
-variable autoscaling_target_group_arns {
+variable "autoscaling_target_group_arns" {
   type        = list(string)
   default     = [""]
   description = " A set of aws_alb_target_group ARNs, for use with Application or Network Load Balancing."
 }
 
-variable create_autoscaling_schedule_down {
+variable "create_autoscaling_schedule_down" {
   type        = bool
   default     = false
   description = "if this valus is true, you'll create a schedule_down"
 }
 
-variable create_autoscaling_schedule_up {
+variable "create_autoscaling_schedule_up" {
   type        = bool
   default     = false
   description = "if this valus is true, you'll create a schedule_up"
 }
 
-variable ec2_subnet_ids {
+variable "ec2_subnet_ids" {
   type        = list(string)
   default     = [""]
   description = "description"
 }
 
-variable ec2_private_ips {
+variable "ec2_private_ips" {
   type        = list(string)
   default     = [""]
   description = "description"
+}
+
+variable "attach_aws_policy_arn" {
+  type        = list(string)
+  default     = []
+  description = "The ARN of the policy you want to apply"
+}
+
+variable "create_target_group_attachment" {
+  type        = bool
+  default     = false
+  description = "description"
+}
+
+variable "target_group" {
+  type        = any
+  default     = []
+  description = "list ARN of target Groups"
 }

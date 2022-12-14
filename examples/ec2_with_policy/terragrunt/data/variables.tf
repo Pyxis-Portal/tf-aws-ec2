@@ -1,10 +1,10 @@
-variable create_user_data_bastion {
+variable "create_user_data_bastion" {
   type        = bool
   default     = false
   description = "description"
 }
 
-variable create_policy_bastion_general {
+variable "create_policy_bastion_general" {
   type        = bool
   default     = false
   description = "description"
