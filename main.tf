@@ -23,7 +23,7 @@ module "ec2_instance" {
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
   hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null
-  associate_public_ip_address = var.create_eip ? true : var.ec2_associate_public_ip_address
+  associate_public_ip_address = var.create_eip ? false : var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
   secondary_private_ips       = var.ec2_secondary_private_ips
   ipv6_address_count          = var.ec2_ipv6_address_count
@@ -135,7 +135,6 @@ resource "aws_launch_template" "this" {
   image_id      = var.ec2_ami
   key_name      = var.ec2_key_name != null ? var.ec2_key_name : element(concat(aws_key_pair.this.*.key_name, [""]), 0)
   user_data     = var.ec2_user_data_base64
-  vpc_security_group_ids = var.ec2_vpc_security_group_ids != null ? var.ec2_vpc_security_group_ids : [element(concat(aws_security_group.ec2_sg.*.id, [""]), 0)]
 
   iam_instance_profile {
     name = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : null

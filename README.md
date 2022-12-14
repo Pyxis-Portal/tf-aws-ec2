@@ -25,6 +25,8 @@
 | [aws_autoscaling_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group) | resource |
 | [aws_autoscaling_schedule.down](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_schedule) | resource |
 | [aws_autoscaling_schedule.up](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_schedule) | resource |
+| [aws_ebs_volume.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ebs_volume) | resource |
+| [aws_eip.eip](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_instance_profile.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -32,6 +34,7 @@
 | [aws_key_pair.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template) | resource |
 | [aws_security_group.ec2_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_volume_attachment.ebs_att](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/volume_attachment) | resource |
 | [aws_iam_policy_document.policy_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
@@ -47,6 +50,7 @@
 | <a name="input_create_attachment_rol"></a> [create\_attachment\_rol](#input\_create\_attachment\_rol) | if true, enable create attachment rol | `bool` | `false` | no |
 | <a name="input_create_autoscaling_group"></a> [create\_autoscaling\_group](#input\_create\_autoscaling\_group) | n/a | `bool` | `false` | no |
 | <a name="input_create_ec2"></a> [create\_ec2](#input\_create\_ec2) | description | `bool` | `false` | no |
+| <a name="input_create_eip"></a> [create\_eip](#input\_create\_eip) | Creates EIPs for the instances when create\_ec2 is True | `bool` | `false` | no |
 | <a name="input_create_iam_instance_profile"></a> [create\_iam\_instance\_profile](#input\_create\_iam\_instance\_profile) | n/a | `bool` | `false` | no |
 | <a name="input_create_key_pair"></a> [create\_key\_pair](#input\_create\_key\_pair) | if true, enable create key pair | `bool` | `false` | no |
 | <a name="input_create_lauch_template"></a> [create\_lauch\_template](#input\_create\_lauch\_template) | description | `bool` | `false` | no |
@@ -56,12 +60,14 @@
 | <a name="input_down_end_time"></a> [down\_end\_time](#input\_down\_end\_time) | description | `string` | `null` | no |
 | <a name="input_down_recurrence"></a> [down\_recurrence](#input\_down\_recurrence) | description | `string` | `""` | no |
 | <a name="input_down_star_time"></a> [down\_star\_time](#input\_down\_star\_time) | description | `string` | `"2014-06-01T00:00:00Z"` | no |
+| <a name="input_ebs_volume"></a> [ebs\_volume](#input\_ebs\_volume) | ebs\_volume = [<br>  {<br>    availability\_zone    = "us-west-2a" # Required<br>    size                 = 40 # Required<br>    device\_name          = "/dev/sdh"<br>    encrypted            = false<br>    iops                 =  null #The amount of IOPS to provision for the disk. Only valid for type of io1, io2 or gp3.<br>    type                 = "gp2"<br>    multi\_attach\_enabled = false<br>    snapshot\_id          = null # A snapshot to base the EBS volume off of.<br>    outpost\_arn          = null #The Amazon Resource Name (ARN) of the Outpost.<br>    kms\_key\_id           = null # The ARN for the KMS encryption key<br>    throughput           =  null # The throughput that the volume supports, in MiB/s. Only valid for type of gp3.<br>    index\_ec2            = 0 # Index of identification of your ec2 in the creation moment in terraform <br>  }<br>] | `any` | `[]` | no |
 | <a name="input_ec2_ami"></a> [ec2\_ami](#input\_ec2\_ami) | ID of AMI to use for the instance | `string` | n/a | yes |
 | <a name="input_ec2_associate_public_ip_address"></a> [ec2\_associate\_public\_ip\_address](#input\_ec2\_associate\_public\_ip\_address) | Whether to associate a public IP address with an instance in a VPC | `bool` | `false` | no |
 | <a name="input_ec2_availability_zone"></a> [ec2\_availability\_zone](#input\_ec2\_availability\_zone) | AZ to start the instance in | `string` | `null` | no |
 | <a name="input_ec2_ebs_block_device"></a> [ec2\_ebs\_block\_device](#input\_ec2\_ebs\_block\_device) | Additional EBS block devices to attach to the instance | `any` | `[]` | no |
 | <a name="input_ec2_ebs_optimized"></a> [ec2\_ebs\_optimized](#input\_ec2\_ebs\_optimized) | If true, the launched EC2 instance will be EBS-optimized | `bool` | `false` | no |
 | <a name="input_ec2_hibernation"></a> [ec2\_hibernation](#input\_ec2\_hibernation) | If true, the launched EC2 instance will support hibernation | `bool` | `false` | no |
+| <a name="input_ec2_instance_count"></a> [ec2\_instance\_count](#input\_ec2\_instance\_count) | Number of identical instances to create in the same subnet | `number` | `1` | no |
 | <a name="input_ec2_instance_type"></a> [ec2\_instance\_type](#input\_ec2\_instance\_type) | The type of instance to start | `string` | n/a | yes |
 | <a name="input_ec2_ipv6_address_count"></a> [ec2\_ipv6\_address\_count](#input\_ec2\_ipv6\_address\_count) | A number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet | `number` | `null` | no |
 | <a name="input_ec2_ipv6_addresses"></a> [ec2\_ipv6\_addresses](#input\_ec2\_ipv6\_addresses) | Specify one or more IPv6 addresses from the range of the subnet to associate with the primary network interface | `list(string)` | `null` | no |
