@@ -1,6 +1,12 @@
 <!-- markdownlint-disable MD033 -->
 <!-- BEGIN_TF_DOCS -->
-## Requirementsw
+# EC2 Module
+
+- Creating EC2 instance
+- Creating Auto Scaling Group
+- Provides an EC2 launch template resource. Can be used to create instances or auto scaling groups.
+
+## Requirements
 
 | Name | Version |
 |------|---------|
