@@ -21,7 +21,7 @@ module "ec2_instance" {
   subnet_id                   = var.ec2_subnet_id
   user_data                   = var.ec2_user_data
   user_data_base64            = var.ec2_user_data != null ? null : var.ec2_user_data_base64
-  hibernation                 = var.ec2_hibernation  
+  hibernation                 = var.ec2_hibernation
   iam_instance_profile        = var.create_iam_instance_profile ? element(concat(aws_iam_instance_profile.this.*.id, [""]), 0) : var.instance_profile_name != "" ? var.instance_profile_name : null
   associate_public_ip_address = var.ec2_associate_public_ip_address
   private_ip                  = var.ec2_private_ip
@@ -154,7 +154,7 @@ resource "aws_security_group" "ec2_sg" {
 }
 
 resource "aws_launch_template" "this" {
-  count = var.create_lauch_template ? 1 : 0
+  count = var.create_launch_template ? 1 : 0
 
   name_prefix   = var.ec2_name
   ebs_optimized = var.ec2_ebs_optimized
@@ -236,12 +236,12 @@ resource "aws_launch_template" "this" {
 resource "aws_autoscaling_group" "this" {
   count = var.create_autoscaling_group && var.autoscaling_name != "" ? 1 : 0
 
-  name                = var.autoscaling_name
-  vpc_zone_identifier = var.autoscaling_subnets
-  max_size            = var.autoscaling_max_size
-  min_size            = var.autoscaling_min_size
-  desired_capacity    = var.autoscaling_desired_capacity
-  target_group_arns   = var.autoscaling_target_group_arns
+  name                      = var.autoscaling_name
+  vpc_zone_identifier       = var.autoscaling_subnets
+  max_size                  = var.autoscaling_max_size
+  min_size                  = var.autoscaling_min_size
+  desired_capacity          = var.autoscaling_desired_capacity
+  target_group_arns         = var.autoscaling_target_group_arns
   health_check_grace_period = var.health_check_grace_period
   #termination_policies    = var.termination_policies
   #enabled_metrics         = var.enabled_metrics
@@ -268,7 +268,7 @@ resource "aws_autoscaling_schedule" "up" {
   start_time             = var.up_star_time
   end_time               = var.up_end_time
   autoscaling_group_name = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
-  time_zone = var.time_zone
+  time_zone              = var.time_zone
 }
 
 resource "aws_autoscaling_schedule" "down" {
@@ -281,5 +281,5 @@ resource "aws_autoscaling_schedule" "down" {
   start_time             = var.down_star_time
   end_time               = var.down_end_time
   autoscaling_group_name = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
-  time_zone = var.time_zone
+  time_zone              = var.time_zone
 }

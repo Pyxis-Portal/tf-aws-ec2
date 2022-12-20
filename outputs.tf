@@ -1,5 +1,5 @@
 locals {
-  name_instance = var.create_lauch_template ? var.ec2_name : ""
+  name_instance = var.create_launch_template ? var.ec2_name : ""
 }
 
 output "id" {
@@ -30,7 +30,7 @@ output "id_security_group" {
 
 output "name_autoscaling" {
   description = "Name of the Auto Scaling Group"
-  value = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
+  value       = element(concat(aws_autoscaling_group.this.*.name, [""]), 0)
 }
 
 
