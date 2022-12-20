@@ -1,12 +1,6 @@
 <!-- markdownlint-disable MD033 -->
 <!-- BEGIN_TF_DOCS -->
-# EC2 Module
-
-- Creating EC2 instance
-- Creating Auto Scaling Group
-- Provides an EC2 launch template resource. Can be used to create instances or auto scaling groups.
-
-## Requirements
+## Requirementsw
 
 | Name | Version |
 |------|---------|
@@ -57,19 +51,19 @@
 | <a name="input_autoscaling_subnets"></a> [autoscaling\_subnets](#input\_autoscaling\_subnets) | description | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | <a name="input_autoscaling_target_group_arns"></a> [autoscaling\_target\_group\_arns](#input\_autoscaling\_target\_group\_arns) | A set of aws\_alb\_target\_group ARNs, for use with Application or Network Load Balancing. | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | <a name="input_block_device_mappings"></a> [block\_device\_mappings](#input\_block\_device\_mappings) | Specify volumes to attach to the instance besides the volumes specified by the AMI | <pre>list(object({<br>    device_name  = string<br>    no_device    = bool<br>    virtual_name = string<br>    ebs = object({<br>      delete_on_termination = bool<br>      encrypted             = bool<br>      iops                  = number<br>      kms_key_id            = string<br>      snapshot_id           = string<br>      volume_size           = number<br>      volume_type           = string<br>    })<br>  }))</pre> | `[]` | no |
-| <a name="input_create_attachment_role"></a> [create\_attachment\_role](#input\_create\_attachment\_role) | if true, enable create attachment rol | `bool` | `false` | no |
+| <a name="input_create_attachment_role"></a> [create\_attachment\_role](#input\_create\_attachment\_role) | if true, enable create attachment role | `bool` | `false` | no |
 | <a name="input_create_autoscaling_group"></a> [create\_autoscaling\_group](#input\_create\_autoscaling\_group) | n/a | `bool` | `false` | no |
-| <a name="input_create_autoscaling_schedule_down"></a> [create\_autoscaling\_schedule\_down](#input\_create\_autoscaling\_schedule\_down) | if this valus is true, you'll create a schedule\_down | `bool` | `false` | no |
-| <a name="input_create_autoscaling_schedule_up"></a> [create\_autoscaling\_schedule\_up](#input\_create\_autoscaling\_schedule\_up) | if this valus is true, you'll create a schedule\_up | `bool` | `false` | no |
+| <a name="input_create_autoscaling_schedule_down"></a> [create\_autoscaling\_schedule\_down](#input\_create\_autoscaling\_schedule\_down) | if set to true, you'll create a schedule\_down | `bool` | `false` | no |
+| <a name="input_create_autoscaling_schedule_up"></a> [create\_autoscaling\_schedule\_up](#input\_create\_autoscaling\_schedule\_up) | if set to true true, you'll create a schedule\_up | `bool` | `false` | no |
 | <a name="input_create_ec2"></a> [create\_ec2](#input\_create\_ec2) | description | `bool` | `false` | no |
 | <a name="input_create_eip"></a> [create\_eip](#input\_create\_eip) | Creates EIPs for the instances when create\_ec2 is True | `bool` | `false` | no |
 | <a name="input_create_eip_association"></a> [create\_eip\_association](#input\_create\_eip\_association) | Creates EIPs for the instances when create\_ec2 is True | `bool` | `false` | no |
 | <a name="input_create_iam_instance_profile"></a> [create\_iam\_instance\_profile](#input\_create\_iam\_instance\_profile) | n/a | `bool` | `false` | no |
 | <a name="input_create_key_pair"></a> [create\_key\_pair](#input\_create\_key\_pair) | if true, enable create key pair | `bool` | `false` | no |
-| <a name="input_create_lauch_template"></a> [create\_lauch\_template](#input\_create\_lauch\_template) | description | `bool` | `false` | no |
-| <a name="input_create_policy"></a> [create\_policy](#input\_create\_policy) | if true, enable create rol | `bool` | `false` | no |
+| <a name="input_create_launch_template"></a> [create\_launch\_template](#input\_create\_launch\_template) | description | `bool` | `false` | no |
+| <a name="input_create_policy"></a> [create\_policy](#input\_create\_policy) | if true, enable create role | `bool` | `false` | no |
 | <a name="input_create_role"></a> [create\_role](#input\_create\_role) | n/a | `bool` | `false` | no |
-| <a name="input_create_sg"></a> [create\_sg](#input\_create\_sg) | if true, enable create security gruop | `bool` | `false` | no |
+| <a name="input_create_sg"></a> [create\_sg](#input\_create\_sg) | if true, enable create security group | `bool` | `false` | no |
 | <a name="input_create_target_group_attachment"></a> [create\_target\_group\_attachment](#input\_create\_target\_group\_attachment) | description | `bool` | `false` | no |
 | <a name="input_down_end_time"></a> [down\_end\_time](#input\_down\_end\_time) | description | `string` | `null` | no |
 | <a name="input_down_recurrence"></a> [down\_recurrence](#input\_down\_recurrence) | description | `string` | `""` | no |
@@ -105,11 +99,11 @@
 | <a name="input_instance_profile_name"></a> [instance\_profile\_name](#input\_instance\_profile\_name) | IAM Role profile name for instance | `string` | `""` | no |
 | <a name="input_instance_profile_role"></a> [instance\_profile\_role](#input\_instance\_profile\_role) | description | `string` | `null` | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The name for the key pair. | `string` | `""` | no |
-| <a name="input_name_lauch_template"></a> [name\_lauch\_template](#input\_name\_lauch\_template) | description | `string` | `""` | no |
+| <a name="input_name_launch_template"></a> [name\_launch\_template](#input\_name\_launch\_template) | description | `string` | `""` | no |
 | <a name="input_policy_json"></a> [policy\_json](#input\_policy\_json) | n/a | `string` | `null` | no |
 | <a name="input_public_key"></a> [public\_key](#input\_public\_key) | The public key material. | `string` | `""` | no |
 | <a name="input_sg_vpc_id"></a> [sg\_vpc\_id](#input\_sg\_vpc\_id) | n/a | `string` | `""` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | all tags for all recursives | `any` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | all tags for all recursively | `any` | `null` | no |
 | <a name="input_target_group"></a> [target\_group](#input\_target\_group) | list ARN of target Groups | `any` | `[]` | no |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | Time zone selection for instance | `string` | `null` | no |
 | <a name="input_up_end_time"></a> [up\_end\_time](#input\_up\_end\_time) | description | `string` | `null` | no |

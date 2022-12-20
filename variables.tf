@@ -131,7 +131,7 @@ variable "public_key" {
 variable "create_sg" {
   type        = bool
   default     = false
-  description = "if true, enable create security gruop"
+  description = "if true, enable create security group"
 }
 
 variable "ec2_sg_ingress_rules" {
@@ -150,19 +150,19 @@ variable "ec2_sg_egress_rules" {
 variable "tags" {
   type        = any
   default     = null
-  description = "all tags for all recursives"
+  description = "all tags for all recursively"
 }
 
 variable "create_attachment_role" {
   type        = bool
   default     = false
-  description = "if true, enable create attachment rol"
+  description = "if true, enable create attachment role"
 }
 
 variable "create_policy" {
   type        = bool
   default     = false
-  description = "if true, enable create rol"
+  description = "if true, enable create role"
 }
 
 variable "policy_json" {
@@ -177,7 +177,7 @@ variable "sg_vpc_id" {
   description = ""
 }
 
-variable "name_lauch_template" {
+variable "name_launch_template" {
   type        = string
   default     = ""
   description = "description"
@@ -219,7 +219,7 @@ variable "create_ec2" {
   description = "description"
 }
 
-variable "create_lauch_template" {
+variable "create_launch_template" {
   type        = bool
   default     = false
   description = "description"
@@ -350,19 +350,19 @@ variable "eip_association_allocation_id" {
 variable "autoscaling_target_group_arns" {
   type        = list(string)
   default     = [""]
-  description = " A set of aws_alb_target_group ARNs, for use with Application or Network Load Balancing."
+  description = "A set of aws_alb_target_group ARNs, for use with Application or Network Load Balancing."
 }
 
 variable "create_autoscaling_schedule_down" {
   type        = bool
   default     = false
-  description = "if this valus is true, you'll create a schedule_down"
+  description = "if set to true, you'll create a schedule_down"
 }
 
 variable "create_autoscaling_schedule_up" {
   type        = bool
   default     = false
-  description = "if this valus is true, you'll create a schedule_up"
+  description = "if set to true true, you'll create a schedule_up"
 }
 
 variable "ec2_subnet_ids" {

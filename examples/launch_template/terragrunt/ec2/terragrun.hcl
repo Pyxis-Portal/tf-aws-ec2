@@ -7,7 +7,7 @@ include {
 }
 
 dependency "data" {
-  config_path = "../data+"
+  config_path = "../data"
 }
 
 terraform {
@@ -15,11 +15,11 @@ terraform {
 }
 
 inputs = {
-  create_lauch_template           = true
+  create_launch_template           = true
   ec2_associate_public_ip_address = true
   create_key_pair                 = true
   create_sg                       = true
-  name_lauch_template             = "example"
+  name_launch_template             = "example"
   autoscaling_name                = "example"
   ec2_name                        = "example"
   key_name                        = "example" 
@@ -52,12 +52,11 @@ inputs = {
 
   ec2_sg_ingress_rules = [
     {
-      description = "load blancer"
+      description = "load balancer"
       from_port   = 22
       to_port     = 22
       cidr_blocks = ["0.0.0.0/0"]
       protocol    = "tcp"
     }
   ]
-
 }
